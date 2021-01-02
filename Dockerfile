@@ -18,7 +18,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN apt-get autoremove -y
 
 COPY ./filebeat.yml /etc/filebeat/filebeat.yml
-RUN chmod go-w /etc/filebeat/filebeat.yml
 
 COPY ./start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
