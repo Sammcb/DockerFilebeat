@@ -1,21 +1,30 @@
 filebeat.inputs:
-  - type: container
-    paths:
-      - /var/lib/docker/containers/*/*.log
+    - type: container
+      paths:
+        - /var/lib/docker/containers/*/*.log
 processors:
   - add_docker_metadata:
       host: unix:///var/run/docker.sock
   - decode_json_fields:
-      fields:
-        - messages
+      fields: ["messages"]
       target: json
       overwrite_keys: true
 output:
-  logstash:
-    enabled: true
-    hosts: 
-      - elk:5044
+  logstash.hosts: ["logstash:5044"]
+  elasticsearch:
+    enabled: false
+    hosts: ["elasticsearch:9200"]
+    username: ${ADMIN_USER}
+    password: ${ADMIN_PASSWORD}
 logging:
   json: true
-  metrics:
-    enabled: true
+  metrics.enabled: true
+setup:
+  kibana:
+    host: "kibana:5601"
+    username: ${ADMIN_USER}
+    password: ${ADMIN_PASSWORD}
+http:
+  enabled: true
+  host: 0.0.0.0
+
